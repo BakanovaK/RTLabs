@@ -1,0 +1,271 @@
+\documentclass[a4paper, 12pt]{article}%тип документа
+
+%отступы
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=3cm,bindingoffset=0cm]{geometry}
+
+%Русский язык
+\usepackage[T2A]{fontenc} %кодировка
+\usepackage[utf8]{inputenc} %кодировка исходного кода
+\usepackage[english,russian]{babel} %локализация и переносы
+
+%Вставка картинок
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\graphicspath{{pictures/}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+
+%оглавление
+\usepackage{titlesec}
+\titlespacing{\chapter}{0pt}{-30pt}{12pt}
+\titlespacing{\section}{\parindent}{5mm}{5mm}
+\titlespacing{\subsection}{\parindent}{5mm}{5mm}
+\usepackage{setspace}
+
+%Графики
+\usepackage{multirow}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.9}
+
+%Математика
+\usepackage{amsmath, amsfonts, amssymb, amsthm, mathtools}
+
+%Стиль страницы
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\begin{document}
+
+\begin{titlepage}
+
+\begin{center}
+%\vspace*{1cm}
+\large\textbf{Московский Физико-Технический Институт}\\
+\large\textbf{(национальный исследовательский университет)}
+\vfill
+\line(1,0){430}\\[3mm]
+\huge\textbf{Лабораторная работа №25}\\
+\line(1,0){430}\\[1mm]
+\vfill
+\large Баканова К.В., Б01-003\\
+%\vspace*{1cm}
+\large март 2022 г.\\
+\end{center}
+
+\end{titlepage}
+\fancyhead[R] {Лабораторная работа №25}
+\section{Ознакомительные шаги}
+
+\begin{enumerate}
+
+\item Откроем в Micro-Cap файл adm3p.cir, в котором подготовлены схемы лестничных фильтров порядка \textit{n} = 3, реализующих входной адмиттанс. Ознакомимся со схемами фильтров нижних частот и результатами их преобразования в фильтры верхних частот, полюсовые и режекторные фильтры.
+
+\item Далее ознакомимся с подготовленными графиками, открыв диалог Limits для режима AC. Запустим моделирование в режиме AC для обоих файлов. Убедимся, что топологически совершенно разные схемы в imp3p.cir и adm3p.cir демонстрируют тождественное поведение графиков.
+
+\end{enumerate}
+
+%Вставка изображения
+%\begin{figure}[h!]
+%\centering
+%\includegraphics[scale=1]{images/image.png}
+%\caption{text}
+%\label{fig:Image1}
+%\end{figure}
+
+\section{Трехполюсные лестничные фильтры}
+
+\begin{enumerate}
+
+\item Откроем модель adm3p.cir и реализуем лестничные фильтры третьего порядка с параметрами:
+
+\[R_0 = 50, \quad f_0 = 1MHz, \quad Q = 10.\]
+
+Для этого вычислим эталонные значения:
+
+\[L_0 = \frac{R_0}{2\pi f_0}, \quad C_0 = \frac{1}{2 \pi f_0 R_0}\]
+
+и установим на схеме номиналы компонентов $f_0, Q, R_0, L_0, C_0$ (это уже было готово, поэтому переходим к следующему пункту).
+
+\item Сравним частотный характеристики фильтров с теоретическими, удостоверимся в правильности расчетов. Также сменим интервал моделирования по частоте на 5Meg, 0
+
+\item Сравним частотные характеристики по напряжению и по мощности. Измерим уровни затухания по мощности на границах полос пропускания, там где затухание по напряжению составляет 0.7. Запишем получившиеся данные в таблицу:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline 
+ & ФНЧ & ФВЧ & Полосовой & Режекторный \\ 
+\hline 
+Затухание по мощности & 0,5 & 0,5 & 0,5 & 0,5 \\ 
+\hline 
+\end{tabular} 
+\end{center}
+
+Исследуем степень деградации характеристик фильтра нижних частот при варьировании сопротивления источника \textit{RSL} и нагрузки \textit{RLL} от 25 до 75 с шагом 25, также запишем это в таблицу:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline 
+ & \multicolumn{2}{c|}{RLL} & \multicolumn{2}{c|}{RSL} \\ 
+\hline 
+ & Напряжение & Мощность & Напряжение & Мощность \\ 
+\hline 
+25 & 0,33 & 0,44 & 0,66 & 1,77 \\ 
+\hline 
+50 & 0,5 & 1 & 0,5 & 1 \\ 
+\hline 
+75 & 0,6 & 1,43 & 0,4 & 0,625 \\ 
+\hline 
+\end{tabular} 
+\end{center}
+
+\item Изучим фазовые характеристики фильтров, измерим значения фазовых сдвигов на нулевой и бесконечной частотах:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline 
+$\omega$ & ФНЧ & ФВЧ & Полосовой & Режекторный \\ 
+\hline 
+0 & 0 & $-\pi/2$ & $3\pi/2$ & 0 \\ 
+\hline 
+$\infty$ & $-3\pi/2$ & $-2\pi$ & $-3\pi/2$ & 0 \\ 
+\hline 
+\end{tabular}
+\end{center} 
+
+\item Выведем логарифмическую частотную характеристику фильтра нижних частот в диапазоне $1Meg,100k$ (логарифмическая шкала) и измерим по ней уровни затухания в децибелах на частотах $0, f_0, 2f_0, 10f_0$:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline 
+$f$ & 0 & $f_0$ & $2f_0-$ & $10f_0$ \\ 
+\hline 
+$K(f_0)$ & -6 & -9 & -24,2 & -66 \\ 
+\hline 
+\end{tabular} 
+\end{center}
+
+\item Выведем логарифмическую частотную характеристику полосового фильтра в диапазоне $1500k,500k$ (линейная шкала) и измерим по ней уровень подавления на частоте $f_0$:
+
+\[K(f_0) = -6 \: dB.\]
+
+Измерим одностороннюю ширину $\bigtriangleup f$ полосы пропускания по уровню $-3 dB$ и уровень затухания при расстройках на $2\bigtriangleup f$, $10\bigtriangleup f$ от частоты $f_0$:
+
+\[\bigtriangleup f = 49\: k\]
+
+\[K(f_0 - 2\bigtriangleup f) = -19 \: dB, \quad K(f_0 + 2\bigtriangleup f) = -16 \: dB\]
+
+\[K(f_0 - 10\bigtriangleup f) = -69,7 \: dB, \quad K(f_0 + 10\bigtriangleup f) = -55 \: dB\]
+
+\item По логарифмической частотной характеристике режекторного фильтра в диапазоне частот $1500,500k$ измерим ширины полос по уровням $-3dB, -43dB, -63dB$:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline 
+$K(f_0 \pm \bigtriangleup f), \: dB$ & $-3$ & $-43$ & $-63$ \\ 
+\hline 
+$\bigtriangleup f$ & 50k & 10k & 4,5k \\ 
+\hline 
+\end{tabular} 
+\end{center}
+
+\end{enumerate}
+
+\section{Фильтры низших частот высших порядков}
+
+\begin{enumerate}
+
+\item Откроем модель batt.cir, в которой реализованы фильтры Баттерворта нижних частот с параметрами $R_0 = 100, f_0 = 1MHz (L_0= 15.916, C_0 = 1.592n)$ порядков от 3 до 7. Изучим их частотные и переходные характеристики. По логарифмическим графикам в диапазоне $10Meg, 100k$ измерим затухания на частотах $f_0, 2f_0$ и $10f_0$:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline 
+Фильтр Баттерворта & n=3 & n=4 & n=5 & n=6 & n=7 \\ 
+\hline 
+$K(f_0), \: dB$ & -3.03 & -3.04 & -3.04 & -3.04 & -3.04 \\ 
+\hline 
+$K(2f_0), \: dB$ & -18.15 & -24.13 & -30.13 & -36.15 & -42.18 \\ 
+\hline 
+$K(10f_0), \: dB$ & -60.02 & -80.03 & -100.03 & -120.03 & -140.03 \\ 
+\hline 
+\end{tabular} 
+\end{center}
+
+\item Повторим те же исследования для фильтров Чебышева с неравномерностями 0.5 dB (файл cheb0-5.cir) и 3 dB (файл cheb3-0.cir)
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline 
+Фильтр Чебышева 0.5 dB & n=3 & n=4 & n=5 & n=6 & n=7 \\ 
+\hline 
+$K(2f_0), \: dB$ & -19,2 & -30,6 & -42,1 & -53,5 & -64,9 \\ 
+\hline 
+$K(10f_0), \: dB$ & -62,8 & -88,9 & -114,9 & -140,9 & -166,9 \\ 
+\hline 
+Фильтр Чебышева 3.0 dB & n=3 & n=4 & n=5 & n=6 & n=7 \\ 
+\hline 
+$K(2f_0), \: dB$ & -28,3 & -39,7 & -51,2 & -62,6 & -74,1 \\ 
+\hline 
+$K(10f_0), \: dB$ & -72,0 & -98,0 & -124,0 & -150,0 & -176 \\ 
+\hline 
+\end{tabular} 
+\end{center}
+
+\item Вернемся к batt.cir и перенастроим фильтры на $R_0 = 50$, $f_0 = 10MHz$.
+
+\end{enumerate}
+
+\section{Фильтры пятого порядка}
+
+\begin{enumerate}
+
+\item Настроим фильтры на $Q = 5, R_0 = 50, f_0 = 1MHz$ (полученные вычислениями значения: $L_0= 7,96u, C_0 = 3,18n$)
+
+\item Превратим все 4 фильтра в нормализованные фильтры Баттерворта, Чебышева с неравномерностями 0,5 и 3,0 dB с помощью коэффициентов, представленных в таблице ниже. Убедимся, что частотные характеристики получившихся фильтров соответствуют теории. 
+    \begin{center}
+    \includegraphics[width=0.8\textwidth]{hhh.png}
+    \end{center}
+
+\end{enumerate}
+
+\section{Семиполюсной фильтр}
+
+\begin{enumerate}
+
+\item Открыв заготовку \textit{pb7p.cir} реализуем семиполюсной фильтр Чебышева с неравномерностью 3 dB. для тракта усилителя промежуточной частоты приемника с параметрами $R_0 = 600$, $f_0 = 465 kHz$ и двухсторонней полосой $\bigtriangleup f = 24 kHz,$ $Q = \frac{f_0}{\bigtriangleup f} = 19.375$. По логарифмической частотной характеристике измерим избирательность по соседнему каналу - уровень затухания при расстройках на $\pm 24 kHz$ от $f_0$:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline 
+$+24 kHz$ & -72.294 dB \\ 
+\hline 
+$-24 kHz$ & -75.923 dB \\ 
+\hline 
+\end{tabular} 
+\end{center}
+
+Аналогично посчитаем разрешающую способность для фильтра Чебышева 0.5 dB:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline 
+$+24 kHz$ & -63.173 dB \\ 
+\hline 
+$-24 kHz$ & -66.802 dB \\ 
+\hline 
+\end{tabular} 
+\end{center}
+
+И для фильтра Баттерворта:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline 
+$+24 kHz$ & -40.655 dB \\ 
+\hline 
+$-24 kHz$ & -43.798 dB \\ 
+\hline 
+\end{tabular} 
+\end{center}
+
+\end{enumerate}
+
+\end{document}
